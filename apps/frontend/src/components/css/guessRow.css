@@ -1,0 +1,21 @@
+.cell {
+  padding: 12px;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.cell.correct {
+  background: #6aaa64; /* Wordle green */
+  color: white;
+}
+
+.cell.wrong {
+  background: #787c7e; /* Wordle gray */
+  color: white;
+}
+
+.arrow {
+  margin-left: 4px;
+  font-size: 1.2em;
+}

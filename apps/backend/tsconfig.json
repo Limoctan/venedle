@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
+    "rootDir": "../../",
+    "strict": true,
+    "types": ["jest"],
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@venedle/shared": ["../../packages/shared/src"]
+    }
+  },
+  "include": ["src", "tests"]
+}

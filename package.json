@@ -1,0 +1,22 @@
+{
+  "name": "venedle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:frontend": "pnpm --filter @venedle/frontend dev",
+    "dev:backend": "pnpm --filter @venedle/backend dev",
+    "dev": "pnpm run dev:backend && pnpm run dev:frontend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.20.0",
+      "onFail": "download"
+    }
+  },
+  "type": "module"
+}
