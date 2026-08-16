@@ -1,7 +1,10 @@
-export enum GuessDirection {
-  Higher = 'higher',
-  Lower = 'lower',
-}
+export const GuessDirection = {
+  Higher: 'higher',
+  Lower: 'lower',
+} as const;
+
+export type GuessDirection =
+  (typeof GuessDirection)[keyof typeof GuessDirection];
 
 export interface GuessResult {
   isCorrect: boolean; // true only if name matches exactly

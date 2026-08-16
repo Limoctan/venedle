@@ -24,10 +24,10 @@ export function Autocomplete({
       openOnInputClick={false}
     >
       <div className={styles.Label}>
-        <label htmlFor={id}>Eligue una persona</label>
+        <label htmlFor={id}>Elige una persona</label>
         <Combobox.InputGroup className={styles.InputGroup}>
           <Combobox.Input
-            placeholder="e.g. Apple"
+            placeholder="Empieza a escribir…"
             id={id}
             className={styles.Input}
             disabled={disabled}
@@ -36,10 +36,10 @@ export function Autocomplete({
       </div>
 
       <Combobox.Portal>
-        <Combobox.Positioner className={styles.Positioner} sideOffset={4}>
+        <Combobox.Positioner className={styles.Positioner} sideOffset={8}>
           <Combobox.Popup className={styles.Popup}>
             <Combobox.Empty>
-              <div className={styles.Empty}>Persona no encontrada.</div>
+              <div className={styles.Empty}>No encontramos a esa persona.</div>
             </Combobox.Empty>
             <Combobox.List className={styles.List}>
               {(item: string) => (

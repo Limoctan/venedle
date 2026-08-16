@@ -1,19 +1,38 @@
-// components/Game.tsx
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useGameState } from '../../hooks/useGameState';
+import { useTodayCharacter } from '../../hooks/useCharacters';
 import { Autocomplete } from './autocomplete';
 import { GuessRow } from './guessRow';
+import { Header } from './header';
+import { ResultCard } from './resultCard';
+import { categoryLabel } from '@/lib/categories';
+
+const CATEGORY_ORDER = [
+  'Field',
+  'Gender',
+  'Birth Year',
+  'State of Origin',
+  'Status',
+  'International Reach',
+  'Peak Era',
+  'Discipline/Genre',
+];
 
 export function Game() {
-  const { guesses, gameWon, gameLost, addGuess } = useGameState();
+  const { guesses, gameWon, gameLost, currentStreak, addGuess } = useGameState();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const gameOver = gameWon || gameLost;
+  const today = useTodayCharacter(gameOver);
+  const answerName =
+    (gameWon && guesses.length > 0 && guesses[guesses.length - 1].name) ||
+    (today?.name ?? '');
+
   const handleGuess = useCallback(
     async (name: string) => {
-      // 1. Guard clauses (prevent bad submissions)
       if (isSubmitting) return;
-      if (gameWon || gameLost) return;
+      if (gameOver) return;
 
       const alreadyGuessed = guesses.some(
         (g) => normalize(g.name) === normalize(name),
@@ -23,14 +42,12 @@ export function Game() {
         return;
       }
 
-      // 2. Start loading
       setIsSubmitting(true);
       setError(null);
 
       const body = { guessedName: name };
 
       try {
-        // 3. POST to backend
         const res = await fetch('http://localhost:3000/api/game/guess', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -43,7 +60,6 @@ export function Game() {
         }
 
         const result = await res.json();
-        // 4. Update state (triggers re-render with new row)
         addGuess({
           name,
           comparisons: result.response.comparisons,
@@ -52,38 +68,64 @@ export function Game() {
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Algo salió mal');
       } finally {
-        // 5. Always clear loading
         setIsSubmitting(false);
       }
     },
-    [isSubmitting, gameWon, gameLost, guesses, addGuess],
+    [isSubmitting, gameOver, guesses, addGuess],
   );
 
   return (
-    <div className="game">
-      {/* Previous guesses */}
-      <div className="guess-grid">
+    <div className="w-full">
+      <Header streak={currentStreak} />
+
+      <div className="grid grid-cols-8 gap-1.5" aria-hidden="true">
+        {CATEGORY_ORDER.map((category) => (
+          <div
+            key={category}
+            className="truncate text-center text-[10px] font-bold tracking-wide text-ink-soft uppercase"
+          >
+            {categoryLabel(category)}
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-2 flex flex-col gap-1.5">
         {guesses.map((guess, i) => (
           <GuessRow key={i} comparisons={guess.comparisons} />
         ))}
       </div>
 
-      {/* Input (only if game is active) */}
-      {!gameWon && !gameLost && (
-        <>
+      {!gameOver && (
+        <div className="mt-6">
           <Autocomplete
             onSelect={handleGuess}
             disabled={isSubmitting}
-            excludedNames={guesses.map((g) => g.name)} // hide already guessed
+            excludedNames={guesses.map((g) => g.name)}
           />
-          {isSubmitting && <span className="loading">Verificando...</span>}
-          {error && <span className="error">{error}</span>}
-        </>
+          {isSubmitting && (
+            <p className="mt-3 text-center text-sm text-ink-soft">
+              Verificando…
+            </p>
+          )}
+          {error && (
+            <p className="mt-3 text-center text-sm font-semibold text-flag-red">
+              {error}
+            </p>
+          )}
+        </div>
       )}
 
-      {/* Win/Lose screens */}
-      {/* {gameWon && <WinModal attempts={guesses.length} />}
-      {gameLost && <LoseModal answer={todaysAnswer} />} */}
+      {gameOver && answerName && today && (
+        <ResultCard
+          won={gameWon}
+          name={answerName}
+          field={today.field}
+          stateOfOrigin={today.stateOfOrigin}
+          attempts={guesses.length}
+          streak={currentStreak}
+          guesses={guesses}
+        />
+      )}
     </div>
   );
 }

@@ -29,15 +29,34 @@ export class GameController {
       const guessedCharacter =
         await this.characterService.getCharacterByName(guessedName);
       const todayCharacter = getDailyCharacter(allCharacters);
-      console.log("Today's character:", todayCharacter);
-      console.log('Guessed character:', guessedCharacter.stateOfOrigin);
-      const result = compareCharacters(todayCharacter, guessedCharacter);
+      const result = compareCharacters(guessedCharacter, todayCharacter);
       const response: GuessResponse = { ...result };
       if (result.isCorrect) {
         response.todayCharacter = todayCharacter;
       }
       res.status(200).json({
         response,
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+      next(error);
+    }
+  };
+
+  getTodayCharacter = async (
+    _req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const allCharacters: Character[] =
+        await this.characterService.getAllCharacters();
+      const todayCharacter = getDailyCharacter(allCharacters);
+      res.status(200).json({
+        response: todayCharacter,
       });
     } catch (error: any) {
       res.status(500).json({
