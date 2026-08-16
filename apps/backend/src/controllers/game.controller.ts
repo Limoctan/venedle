@@ -24,11 +24,9 @@ export class GameController {
         });
       }
 
-      const allCharacters: Character[] =
-        await this.characterService.getAllCharacters();
       const guessedCharacter =
         await this.characterService.getCharacterByName(guessedName);
-      const todayCharacter = getDailyCharacter(allCharacters);
+      const todayCharacter = await this.characterService.getTodayCharacter();
       const result = compareCharacters(guessedCharacter, todayCharacter);
       const response: GuessResponse = { ...result };
       if (result.isCorrect) {
@@ -52,9 +50,7 @@ export class GameController {
     next: NextFunction,
   ) => {
     try {
-      const allCharacters: Character[] =
-        await this.characterService.getAllCharacters();
-      const todayCharacter = getDailyCharacter(allCharacters);
+      const todayCharacter = await this.characterService.getTodayCharacter();
       res.status(200).json({
         response: todayCharacter,
       });
