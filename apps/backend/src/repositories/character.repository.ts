@@ -52,7 +52,9 @@ export class CharacterRepository {
 
   getAllCharacters = async () => {
     try {
-      const rows: CharacterRow[] = await db.any('SELECT * FROM characters');
+      const rows: CharacterRow[] = await db.any(
+        'SELECT * FROM characters ORDER BY id ASC',
+      );
       return rows.map(toCharacter);
     } catch (error) {
       console.error('Error fetching all characters:', error);
