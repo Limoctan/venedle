@@ -2,6 +2,7 @@ import { ArrowDown, ArrowUp } from 'lucide-react';
 import type { Comparison } from '@venedle/shared/src/types/guesses';
 import { cn } from '@/lib/utils';
 import { shortValue } from '@/lib/categories';
+import '../css/guessRow.css';
 
 export function GuessRow({ comparisons }: { comparisons: Comparison[] }) {
   return (
@@ -11,14 +12,13 @@ export function GuessRow({ comparisons }: { comparisons: Comparison[] }) {
           key={col.category}
           title={col.guessedValue}
           className={cn(
-            'relative flex min-h-10 flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1.5',
+            `cell relative flex min-h-10 flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1.5 aspect-9/10`,
             col.match
               ? 'bg-correct text-white shadow-sm'
-              : 'bg-miss text-miss-ink',
+              : 'bg-miss text-white',
           )}
         >
-          {col.match && <span className="flag-stripe" aria-hidden="true" />}
-          <span className="w-full truncate text-center text-[11px] font-bold leading-tight">
+          <span className="w-full text-center text-[11px] font-bold leading-tight">
             {shortValue(col.guessedValue)}
           </span>
           {!col.match && col.direction && (

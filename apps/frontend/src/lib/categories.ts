@@ -1,10 +1,10 @@
 export const CATEGORY_LABELS: Record<string, string> = {
-  Field: 'Campo',
+  Field: 'Carrera',
   Gender: 'Género',
-  'Birth Year': 'Año',
+  'Birth Year': 'Nacimiento',
   'State of Origin': 'Estado',
   Status: 'Estatus',
-  'International Reach': 'Alcance',
+  'International Reach': 'Relevancia',
   'Peak Era': 'Época',
   'Discipline/Genre': 'Disciplina',
 };

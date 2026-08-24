@@ -4,6 +4,7 @@ import type { Comparison } from '@venedle/shared/src/types/guesses';
 interface ResultCardProps {
   won: boolean;
   name: string;
+  imgUrl: string;
   field: string;
   stateOfOrigin: string;
   attempts: number;
@@ -11,7 +12,11 @@ interface ResultCardProps {
   guesses: { comparisons: Comparison[] }[];
 }
 
-function buildShareText(won: boolean, attempts: number, guesses: { comparisons: Comparison[] }[]) {
+function buildShareText(
+  won: boolean,
+  attempts: number,
+  guesses: { comparisons: Comparison[] }[],
+) {
   const date = new Date();
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -24,6 +29,7 @@ function buildShareText(won: boolean, attempts: number, guesses: { comparisons: 
 export function ResultCard({
   won,
   name,
+  imgUrl,
   field,
   stateOfOrigin,
   attempts,
@@ -49,7 +55,15 @@ export function ResultCard({
         className="flex size-16 items-center justify-center rounded-full bg-flag-blue font-display text-3xl font-bold text-white"
         aria-hidden="true"
       >
-        {name.charAt(0)}
+        {imgUrl ? (
+          <img
+            src={imgUrl}
+            alt={name}
+            className="size-full rounded-full object-cover"
+          />
+        ) : (
+          name.charAt(0)
+        )}
       </div>
 
       <h2 className="mt-4 font-display text-2xl font-bold text-ink">

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Combobox } from '@base-ui/react/combobox';
 import styles from '../css/Autocomplete.module.css';
 import { useCharacterNames } from '@/hooks/useCharacters';
+import { useState } from 'react';
 
 export function Autocomplete({
   onSelect,
@@ -13,7 +14,7 @@ export function Autocomplete({
   excludedNames?: string[];
 }) {
   const { names } = useCharacterNames();
-
+  const [inputValue, setInputValue] = useState('');
   const filteredNames = names.filter((name) => !excludedNames.includes(name));
 
   const id = React.useId();
@@ -22,12 +23,20 @@ export function Autocomplete({
       items={filteredNames}
       disabled={disabled}
       openOnInputClick={false}
+      onValueChange={() => setInputValue('')}
+      onInputValueChange={(value, eventDetails) => {
+        // Only update from actual typing; ignore internal updates
+        // triggered by item selection, highlighting, etc.
+        if (eventDetails.reason === 'input-change') {
+          setInputValue(value);
+        }
+      }}
+      inputValue={inputValue}
     >
       <div className={styles.Label}>
-        <label htmlFor={id}>Elige una persona</label>
         <Combobox.InputGroup className={styles.InputGroup}>
           <Combobox.Input
-            placeholder="Empieza a escribir…"
+            placeholder="Ingresa un venezolano..."
             id={id}
             className={styles.Input}
             disabled={disabled}

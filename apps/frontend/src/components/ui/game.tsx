@@ -19,7 +19,8 @@ const CATEGORY_ORDER = [
 ];
 
 export function Game() {
-  const { guesses, gameWon, gameLost, currentStreak, addGuess } = useGameState();
+  const { guesses, gameWon, gameLost, currentStreak, addGuess } =
+    useGameState();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -78,25 +79,8 @@ export function Game() {
     <div className="w-full">
       <Header streak={currentStreak} />
 
-      <div className="grid grid-cols-8 gap-1.5" aria-hidden="true">
-        {CATEGORY_ORDER.map((category) => (
-          <div
-            key={category}
-            className="truncate text-center text-[10px] font-bold tracking-wide text-ink-soft uppercase"
-          >
-            {categoryLabel(category)}
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-2 flex flex-col gap-1.5">
-        {guesses.map((guess, i) => (
-          <GuessRow key={i} comparisons={guess.comparisons} />
-        ))}
-      </div>
-
       {!gameOver && (
-        <div className="mt-6">
+        <div className="mt-6 mb-8">
           <Autocomplete
             onSelect={handleGuess}
             disabled={isSubmitting}
@@ -115,10 +99,30 @@ export function Game() {
         </div>
       )}
 
+      {guesses.length > 0 && (
+        <div className="grid grid-cols-8 gap-1.5" aria-hidden="true">
+          {CATEGORY_ORDER.map((category) => (
+            <div
+              key={category}
+              className="truncate text-center text-[10px] font-bold tracking-wide text-ink-soft uppercase"
+            >
+              {categoryLabel(category)}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-2 flex flex-col-reverse gap-2">
+        {guesses.map((guess, i) => (
+          <GuessRow key={i} comparisons={guess.comparisons} />
+        ))}
+      </div>
+
       {gameOver && answerName && today && (
         <ResultCard
           won={gameWon}
           name={answerName}
+          imgUrl={today.imageUrl ?? ''}
           field={today.field}
           stateOfOrigin={today.stateOfOrigin}
           attempts={guesses.length}

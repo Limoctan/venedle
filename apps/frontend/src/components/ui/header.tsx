@@ -9,7 +9,7 @@ export function Header({ streak }: { streak: number }) {
     <header className="mb-6 flex items-start justify-between gap-4">
       <div>
         <h1 className="font-display text-4xl font-bold tracking-tight text-ink">
-          Venedle
+          V.E.N.E.D.L.E
         </h1>
         <p className="mt-1 text-sm text-ink-soft">
           ¿Quién es el venezolano de hoy?

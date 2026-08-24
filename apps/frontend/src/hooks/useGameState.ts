@@ -42,7 +42,7 @@ export function useGameState() {
   const gameState = isNewDay
     ? {
         ...DEFAULT_STATE,
-        currentStreak: 0,
+        currentStreak: state.currentStreak,
         maxStreak: state.maxStreak,
         stats: state.stats,
       }
