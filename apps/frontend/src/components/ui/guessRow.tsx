@@ -2,11 +2,27 @@ import { ArrowDown, ArrowUp } from 'lucide-react';
 import type { Comparison } from '@venedle/shared/src/types/guesses';
 import { cn } from '@/lib/utils';
 import { shortValue } from '@/lib/categories';
+import { Avatar } from './avatar';
 import '../css/guessRow.css';
 
-export function GuessRow({ comparisons }: { comparisons: Comparison[] }) {
+export function GuessRow({
+  name,
+  comparisons,
+  imgUrl,
+}: {
+  name: string;
+  comparisons: Comparison[];
+  imgUrl?: string;
+}) {
   return (
-    <div className="grid grid-cols-8 gap-1.5">
+    <div className="grid grid-cols-9 gap-1.5">
+      <div className="avatar-cell relative aspect-9/10 min-h-10" title={name}>
+        <Avatar
+          name={name}
+          src={imgUrl}
+          className="size-full rounded-xl text-sm"
+        />
+      </div>
       {comparisons.map((col) => (
         <div
           key={col.category}

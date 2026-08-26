@@ -1,27 +1,60 @@
 // hooks/useCharacters.ts
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Character } from '@venedle/shared/src/types/characters';
 
-export const useCharacterNames = () => {
-  const [names, setNames] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+// Module-level cache so every hook consumer shares one HTTP request.
+let cache: Character[] | null = null;
+let pending: Promise<Character[]> | null = null;
+
+function fetchAllCharacters(): Promise<Character[]> {
+  if (cache) return Promise.resolve(cache);
+  if (!pending) {
+    pending = fetch('/api/characters')
+      .then((r) => r.json())
+      .then((characters: Character[]) => {
+        cache = characters;
+        return characters;
+      });
+  }
+  return pending;
+}
+
+export function useCharacterDirectory() {
+  const [characters, setCharacters] = useState<Character[] | null>(cache);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/characters/names')
-      .then((r) => r.json())
-      .then(setNames)
-      .finally(() => setLoading(false));
-  }, []);
+    if (characters) return;
+    let alive = true;
+    fetchAllCharacters().then((chars) => {
+      if (alive) setCharacters(chars);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [characters]);
 
-  return { names, loading };
-};
+  const names = useMemo(
+    () => characters?.map((c) => c.name) ?? [],
+    [characters],
+  );
+
+  const imageByName = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const c of characters ?? []) {
+      if (c.imageUrl) map.set(c.name, c.imageUrl);
+    }
+    return map;
+  }, [characters]);
+
+  return { names, imageByName, loading: characters === null };
+}
 
 export const useTodayCharacter = (enabled: boolean) => {
   const [character, setCharacter] = useState<Character | null>(null);
 
   useEffect(() => {
     if (!enabled) return;
-    fetch('http://localhost:3000/api/game/today')
+    fetch('/api/game/today')
       .then((r) => r.json())
       .then((data) => setCharacter(data.response ?? null))
       .catch(() => setCharacter(null));

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Combobox } from '@base-ui/react/combobox';
 import styles from '../css/Autocomplete.module.css';
-import { useCharacterNames } from '@/hooks/useCharacters';
+import { useCharacterDirectory } from '@/hooks/useCharacters';
 import { useState } from 'react';
+import { Avatar } from './avatar';
 
 export function Autocomplete({
   onSelect,
@@ -13,7 +14,7 @@ export function Autocomplete({
   disabled?: boolean;
   excludedNames?: string[];
 }) {
-  const { names } = useCharacterNames();
+  const { names, imageByName } = useCharacterDirectory();
   const [inputValue, setInputValue] = useState('');
   const filteredNames = names.filter((name) => !excludedNames.includes(name));
 
@@ -58,6 +59,11 @@ export function Autocomplete({
                   className={styles.Item}
                   onClick={() => onSelect(item)}
                 >
+                  <Avatar
+                    name={item}
+                    src={imageByName.get(item)}
+                    className="size-7 rounded-full text-[10px]"
+                  />
                   <span className={styles.ItemText}>{item}</span>
                 </Combobox.Item>
               )}

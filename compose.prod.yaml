@@ -1,0 +1,27 @@
+# Production-like overrides.
+#   docker compose -f compose.yaml -f compose.prod.yaml up --build
+# Only nginx (frontend) publishes a port; backend and db stay internal.
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+      target: prod
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgres://venedle:${POSTGRES_PASSWORD}@db:5432/venedle
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      target: prod
+    ports:
+      - '${FRONTEND_PORT:-80}:80'
+    depends_on:
+      - backend

@@ -1,0 +1,43 @@
+# Dev overrides, loaded automatically by `docker compose up`.
+#   backend  nodemon + ts-node with hot reload (source bind-mounted)
+#   frontend vite dev server with hot reload
+#   db       published on the host for psql/GUI tools
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+      target: dev
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgres://venedle:${POSTGRES_PASSWORD}@db:5432/venedle
+    volumes:
+      - ./apps/backend/src:/repo/apps/backend/src
+      - ./packages/shared/src:/repo/packages/shared/src
+    ports:
+      - '${BACKEND_HOST_PORT:-3000}:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      target: dev
+    environment:
+      NODE_ENV: development
+      BACKEND_PROXY: http://backend:3000
+    volumes:
+      - ./apps/frontend/src:/repo/apps/frontend/src
+      - ./packages/shared/src:/repo/packages/shared/src
+    ports:
+      - '5173:5173'
+    depends_on:
+      - backend
+
+  db:
+    ports:
+      - '${POSTGRES_HOST_PORT:-5434}:5432'

@@ -1,0 +1,38 @@
+# syntax=docker/dockerfile:1
+# Multi-stage image for @venedle/frontend.
+#   dev  -> vite dev server (hot reload, source bind-mounted by compose)
+#   prod -> static build served by nginx (also proxies /api to the backend)
+
+ARG NODE_VERSION=24-alpine
+
+FROM node:${NODE_VERSION} AS base
+RUN npm install -g pnpm@11.20.0
+WORKDIR /repo
+
+# Install all workspace dependencies (build needs devDeps: vite/typescript).
+FROM base AS deps
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/frontend/package.json apps/frontend/
+COPY packages/shared/package.json packages/shared/
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --frozen-lockfile
+
+# ---- dev: vite dev server --------------------------------------------------
+FROM deps AS dev
+COPY packages/shared packages/shared
+COPY apps/frontend apps/frontend
+ENV NODE_ENV=development
+EXPOSE 5173
+CMD ["pnpm", "--filter", "@venedle/frontend", "dev"]
+
+# ---- build: static production bundle ----------------------------------------
+FROM deps AS build
+COPY packages/shared packages/shared
+COPY apps/frontend apps/frontend
+RUN pnpm --filter @venedle/frontend build
+
+# ---- prod: nginx + static files ---------------------------------------------
+FROM nginx:1.29-alpine AS prod
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /repo/apps/frontend/dist /usr/share/nginx/html
+EXPOSE 80

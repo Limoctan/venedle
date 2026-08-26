@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Comparison } from '@venedle/shared/src/types/guesses';
+import { Avatar } from './avatar';
 
 interface ResultCardProps {
   won: boolean;
@@ -51,20 +52,12 @@ export function ResultCard({
 
   return (
     <section className="mt-6 flex flex-col items-center rounded-3xl bg-white p-6 text-center shadow-sm">
-      <div
-        className="flex size-16 items-center justify-center rounded-full bg-flag-blue font-display text-3xl font-bold text-white"
-        aria-hidden="true"
-      >
-        {imgUrl ? (
-          <img
-            src={imgUrl}
-            alt={name}
-            className="size-full rounded-full object-cover"
-          />
-        ) : (
-          name.charAt(0)
-        )}
-      </div>
+      <Avatar
+        name={name}
+        src={imgUrl || undefined}
+        tone="blue"
+        className="size-16 rounded-full font-display text-3xl"
+      />
 
       <h2 className="mt-4 font-display text-2xl font-bold text-ink">
         {won ? '¡Lo lograste!' : '¡Se acabaron los intentos!'}

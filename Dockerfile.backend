@@ -1,0 +1,46 @@
+# syntax=docker/dockerfile:1
+# Multi-stage image for @venedle/backend.
+#   dev  -> nodemon + ts-node (hot reload, source bind-mounted by compose)
+#   prod -> esbuild bundle run by plain node (tsc build is unusable here:
+#           wrong rootDir and @venedle/shared cannot be resolved at runtime)
+
+ARG NODE_VERSION=24-alpine
+
+FROM node:${NODE_VERSION} AS base
+RUN npm install -g pnpm@11.20.0
+WORKDIR /repo
+
+# Install all workspace dependencies (backend needs devDeps: ts-node/nodemon/esbuild/typescript).
+FROM base AS deps
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/backend/package.json apps/backend/
+COPY packages/shared/package.json packages/shared/
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --frozen-lockfile
+
+# ---- dev: full toolchain + ts sources -------------------------------------
+FROM deps AS dev
+COPY packages/shared packages/shared
+COPY apps/backend apps/backend
+ENV NODE_ENV=development
+WORKDIR /repo
+EXPOSE 3000
+CMD ["pnpm", "--filter", "@venedle/backend", "dev"]
+
+# ---- build: bundle backend + shared into one CJS file ----------------------
+FROM deps AS build
+COPY packages/shared packages/shared
+COPY apps/backend apps/backend
+WORKDIR /repo/apps/backend
+RUN pnpm exec esbuild src/server.ts \
+      --bundle --platform=node --format=cjs \
+      --outfile=dist/server.js
+
+# ---- prod: minimal runtime -------------------------------------------------
+FROM node:${NODE_VERSION} AS prod
+ENV NODE_ENV=production
+WORKDIR /app
+COPY --from=build --chown=node:node /repo/apps/backend/dist/server.js ./server.js
+USER node
+EXPOSE 3000
+CMD ["node", "server.js"]

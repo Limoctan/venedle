@@ -9,7 +9,8 @@ export interface Character {
     | "Comediante"
     | "Periodista"
     | "Presentador de TV"
-    | "Escritor";
+    | "Escritor"
+    | "Artista";
   gender: "Masculino" | "Femenino" | "Non-binario";
   birthYear: number;
   stateOfOrigin: string;

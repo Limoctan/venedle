@@ -1,6 +1,9 @@
 import { useCallback, useState } from 'react';
 import { useGameState } from '../../hooks/useGameState';
-import { useTodayCharacter } from '../../hooks/useCharacters';
+import {
+  useCharacterDirectory,
+  useTodayCharacter,
+} from '../../hooks/useCharacters';
 import { Autocomplete } from './autocomplete';
 import { GuessRow } from './guessRow';
 import { Header } from './header';
@@ -21,6 +24,7 @@ const CATEGORY_ORDER = [
 export function Game() {
   const { guesses, gameWon, gameLost, currentStreak, addGuess } =
     useGameState();
+  const { imageByName } = useCharacterDirectory();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,7 +53,7 @@ export function Game() {
       const body = { guessedName: name };
 
       try {
-        const res = await fetch('http://localhost:3000/api/game/guess', {
+        const res = await fetch('/api/game/guess', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
@@ -100,7 +104,10 @@ export function Game() {
       )}
 
       {guesses.length > 0 && (
-        <div className="grid grid-cols-8 gap-1.5" aria-hidden="true">
+        <div className="grid grid-cols-9 gap-1.5" aria-hidden="true">
+          <div className="text-center text-[10px] font-bold tracking-wide text-ink-soft uppercase">
+            Foto
+          </div>
           {CATEGORY_ORDER.map((category) => (
             <div
               key={category}
@@ -114,7 +121,12 @@ export function Game() {
 
       <div className="mt-2 flex flex-col-reverse gap-2">
         {guesses.map((guess, i) => (
-          <GuessRow key={i} comparisons={guess.comparisons} />
+          <GuessRow
+            key={i}
+            name={guess.name}
+            comparisons={guess.comparisons}
+            imgUrl={imageByName.get(guess.name)}
+          />
         ))}
       </div>
 

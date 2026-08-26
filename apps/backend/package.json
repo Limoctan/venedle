@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "nodemon --watch src/**/*.ts --exec ts-node src/server.ts",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node src/server.ts",
     "lint": "eslint 'src/**/*.ts'",
     "test": "jest"
   },
@@ -26,6 +26,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
+    "esbuild": "^0.27.2",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
