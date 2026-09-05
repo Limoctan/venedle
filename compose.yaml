@@ -13,8 +13,8 @@ services:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U venedle -d venedle']
-      interval: 5s
-      timeout: 5s
+      interval: 60s
+      timeout: 60s
       retries: 10
 
 volumes:

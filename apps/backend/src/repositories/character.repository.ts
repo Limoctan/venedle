@@ -13,6 +13,7 @@ interface CharacterRow {
   peak_era: string;
   discipline_genre: string;
   image_url?: string | null;
+  wiki_url?: string | null;
 }
 
 function toCharacter(row: CharacterRow): Character {
@@ -28,6 +29,7 @@ function toCharacter(row: CharacterRow): Character {
     peakEra: row.peak_era,
     disciplineGenre: row.discipline_genre,
     imageUrl: row.image_url ?? undefined,
+    wikiUrl: row.wiki_url ?? undefined,
   };
 }
 
