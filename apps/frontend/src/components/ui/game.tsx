@@ -80,7 +80,7 @@ export function Game() {
   );
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-gray-950/80 shadow-2xl/100 rounded-4xl px-4 pt-6 pb-8 sm:px-6 lg:px-8">
       <Header streak={currentStreak} />
 
       {!gameOver && (
@@ -105,13 +105,13 @@ export function Game() {
 
       {guesses.length > 0 && (
         <div className="grid grid-cols-9 gap-1.5" aria-hidden="true">
-          <div className="text-center text-[10px] font-bold tracking-wide text-ink-soft uppercase">
+          <div className="text-center text-[14px] text-border font-bold tracking-wide uppercase">
             Foto
           </div>
           {CATEGORY_ORDER.map((category) => (
             <div
               key={category}
-              className="truncate text-center text-[10px] font-bold tracking-wide text-ink-soft uppercase"
+              className="truncate text-center text-[14px] font-bold tracking-wide text-border uppercase"
             >
               {categoryLabel(category)}
             </div>

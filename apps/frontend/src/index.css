@@ -93,6 +93,12 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  image-rendering: -moz-crisp-edges; /* Firefox        */
+  image-rendering: -o-crisp-edges; /* Opera          */
+  image-rendering: -webkit-optimize-contrast; /* Safari         */
+  image-rendering: optimize-contrast; /* CSS3 Proposed  */
+  -ms-interpolation-mode: nearest-neighbor; /* IE8+           */
 }
 
 .dark {
@@ -130,9 +136,8 @@
 }
 
 body {
-  background-image: url('/img/viva_venezuela.jfif');
-  background-size: cover;
-  background-position: center;
+  background: url('/img/collage_venezuela20.png') fixed;
+  background-size: contain;
 }
 
 @layer base {
@@ -145,4 +150,17 @@ body {
   html {
     @apply font-sans;
   }
+}
+
+.text-border {
+  color: white;
+  text-shadow:
+    -2px -2px 0 #000,
+    0 -2px 0 #000,
+    2px -2px 0 #000,
+    2px 0 0 #000,
+    2px 2px 0 #000,
+    0 2px 0 #000,
+    -2px 2px 0 #000,
+    -2px 0 0 #000;
 }

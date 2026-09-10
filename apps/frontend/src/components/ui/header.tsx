@@ -8,10 +8,10 @@ export function Header({ streak }: { streak: number }) {
   return (
     <header className="mb-6 flex items-start justify-between gap-4">
       <div>
-        <h1 className="font-display text-4xl font-bold tracking-tight text-ink">
+        <h1 className="font-display text-4xl font-bold tracking-tight text-border">
           V.E.N.E.D.L.E
         </h1>
-        <p className="mt-1 text-sm text-ink-soft">
+        <p className="mt-2 text-sm text-ink-soft">
           ¿Quién es el venezolano de hoy?
         </p>
         <p className="text-xs text-ink-soft/80 capitalize">

@@ -16,7 +16,10 @@ export function GuessRow({
 }) {
   return (
     <div className="grid grid-cols-9 gap-1.5">
-      <div className="avatar-cell relative aspect-9/10 min-h-10" title={name}>
+      <div
+        className="avatar-cell relative aspect-9/10 min-h-10 border-black shadow-lg/20"
+        title={name}
+      >
         <Avatar
           name={name}
           src={imgUrl}
@@ -28,13 +31,13 @@ export function GuessRow({
           key={col.category}
           title={col.guessedValue}
           className={cn(
-            `cell relative flex min-h-10 flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1.5 aspect-9/10`,
+            `cell relative flex min-h-10 flex-col items-center justify-center border-2 border-black shadow-lg/20 text-shadow-lg/50 gap-0.5 rounded-xl px-1 py-1.5 aspect-9/10`,
             col.match
               ? 'bg-correct text-white shadow-sm'
               : 'bg-miss text-white',
           )}
         >
-          <span className="w-full text-center text-[11px] font-bold leading-tight">
+          <span className="w-full text-center text-[12px] font-bold leading-tight">
             {shortValue(col.guessedValue)}
           </span>
           {!col.match && col.direction && (
