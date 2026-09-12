@@ -32,6 +32,7 @@ services:
       BACKEND_PROXY: http://backend:3000
     volumes:
       - ./apps/frontend/src:/repo/apps/frontend/src
+      - ./apps/frontend/index.html:/repo/apps/frontend/index.html
       - ./apps/frontend/public:/repo/apps/frontend/public
       - ./packages/shared/src:/repo/packages/shared/src
     ports:
