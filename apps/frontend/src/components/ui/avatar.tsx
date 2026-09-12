@@ -8,12 +8,7 @@ interface AvatarProps {
   className?: string;
 }
 
-export function Avatar({
-  name,
-  src,
-  tone = 'sand',
-  className,
-}: AvatarProps) {
+export function Avatar({ name, src, tone = 'sand', className }: AvatarProps) {
   const [failed, setFailed] = useState(false);
   const showImage = Boolean(src) && !failed;
 
@@ -32,7 +27,7 @@ export function Avatar({
           alt=""
           loading="lazy"
           onError={() => setFailed(true)}
-          className="size-full object-cover"
+          className="size-full"
         />
       ) : (
         <span>{getInitials(name)}</span>
@@ -49,7 +44,5 @@ function getInitials(name: string): string {
     .filter(Boolean);
   if (words.length === 0) return '?';
   if (words.length === 1) return words[0].charAt(0).toUpperCase();
-  return (
-    words[0].charAt(0) + words[words.length - 1].charAt(0)
-  ).toUpperCase();
+  return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
 }

@@ -20,7 +20,7 @@ export function Header({ streak }: { streak: number }) {
       </div>
       {streak > 0 && (
         <span
-          className="flex shrink-0 items-center gap-1.5 rounded-full bg-sand px-3 py-1.5 text-sm font-bold text-ink shadow-sm"
+          className="flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-sm font-bold text-ink"
           title="Racha de días ganados"
         >
           <span aria-hidden="true">🔥</span>

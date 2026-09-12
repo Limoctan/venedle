@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useGameState } from '../../hooks/useGameState';
 import {
   useCharacterDirectory,
@@ -33,6 +33,8 @@ export function Game() {
   const answerName =
     (gameWon && guesses.length > 0 && guesses[guesses.length - 1].name) ||
     (today?.name ?? '');
+
+  const resultCardRef = useRef<HTMLDivElement>(null);
 
   const handleGuess = useCallback(
     async (name: string) => {
@@ -79,6 +81,17 @@ export function Game() {
     [isSubmitting, gameOver, guesses, addGuess],
   );
 
+  useEffect(() => {
+    if (gameOver && answerName && today) {
+      console.log('Game over, scrolling to result card');
+      console.log('resultCardRef.current:', resultCardRef.current);
+      resultCardRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center', // or 'start'
+      });
+    }
+  }, [gameOver, answerName, today]);
+
   return (
     <div className="w-full bg-gray-950/80 shadow-2xl/100 rounded-4xl px-4 pt-6 pb-8 sm:px-6 lg:px-8">
       <Header streak={currentStreak} />
@@ -104,43 +117,49 @@ export function Game() {
       )}
 
       {guesses.length > 0 && (
-        <div className="grid grid-cols-9 gap-1.5" aria-hidden="true">
-          <div className="text-center text-[14px] text-border font-bold tracking-wide uppercase">
-            Foto
-          </div>
-          {CATEGORY_ORDER.map((category) => (
-            <div
-              key={category}
-              className="truncate text-center text-[14px] font-bold tracking-wide text-border uppercase"
-            >
-              {categoryLabel(category)}
+        <div className="overflow-x-auto">
+          <div className="min-w-200">
+            <div className="grid grid-cols-9 gap-1" aria-hidden="true">
+              <div className="text-center text-[14px] text-border font-bold tracking-wide uppercase">
+                Foto
+              </div>
+              {CATEGORY_ORDER.map((category) => (
+                <div
+                  key={category}
+                  className="truncate text-center text-[14px] font-bold tracking-wide text-border uppercase"
+                >
+                  {categoryLabel(category)}
+                </div>
+              ))}
             </div>
-          ))}
+
+            <div className="mt-2 flex flex-col-reverse gap-2">
+              {guesses.map((guess, i) => (
+                <GuessRow
+                  key={i}
+                  name={guess.name}
+                  comparisons={guess.comparisons}
+                  imgUrl={imageByName.get(guess.name)}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
-      <div className="mt-2 flex flex-col-reverse gap-2">
-        {guesses.map((guess, i) => (
-          <GuessRow
-            key={i}
-            name={guess.name}
-            comparisons={guess.comparisons}
-            imgUrl={imageByName.get(guess.name)}
-          />
-        ))}
-      </div>
-
       {gameOver && answerName && today && (
-        <ResultCard
-          won={gameWon}
-          name={answerName}
-          imgUrl={today.imageUrl ?? ''}
-          wikiUrl={today.wikiUrl ?? ''}
-          field={today.field}
-          stateOfOrigin={today.stateOfOrigin}
-          attempts={guesses.length}
-          streak={currentStreak}
-        />
+        <div ref={resultCardRef} className="mt-6">
+          <ResultCard
+            won={gameWon}
+            name={answerName}
+            imgUrl={today.imageUrl ?? ''}
+            wikiUrl={today.wikiUrl ?? ''}
+            field={today.field}
+            stateOfOrigin={today.stateOfOrigin}
+            attempts={guesses.length}
+            streak={currentStreak}
+          />
+        </div>
       )}
     </div>
   );
