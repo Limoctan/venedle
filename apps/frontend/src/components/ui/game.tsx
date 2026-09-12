@@ -135,11 +135,11 @@ export function Game() {
           won={gameWon}
           name={answerName}
           imgUrl={today.imageUrl ?? ''}
+          wikiUrl={today.wikiUrl ?? ''}
           field={today.field}
           stateOfOrigin={today.stateOfOrigin}
           attempts={guesses.length}
           streak={currentStreak}
-          guesses={guesses}
         />
       )}
     </div>
