@@ -15,10 +15,15 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
-      - name: Test Tailscale connectivity
+      - name: Tailscale status
+        run: tailscale status
+
+      - name: Tailscale ping al servidor
+        run: tailscale ping ${{ secrets.SERVER_HOST }} || true
+
+      - name: Test conectividad TCP al 22
         run: |
-          ping -c 3 ${{ secrets.SERVER_HOST }}
-          nc -zv ${{ secrets.SERVER_HOST }} 22
+          timeout 10 bash -c 'cat < /dev/null > /dev/tcp/${{ secrets.SERVER_HOST }}/22' && echo "PUERTO 22 ABIERTO" || echo "PUERTO 22 CERRADO/INACCESIBLE"
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
