@@ -2,35 +2,13 @@ name: Deploy
 on:
   push:
     branches: [main]
-permissions:
-  id-token: write
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-      - name: Tailscale
-        uses: tailscale/github-action@v4
-        with:
-          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-          tags: tag:ci
-      - name: Tailscale status
-        run: tailscale status
-
-      - name: Tailscale ping al servidor
-        run: tailscale ping ${{ secrets.SERVER_HOST }} || true
-
-      - name: Test conectividad TCP al 22
+      - name: Update and deploy
         run: |
-          timeout 10 bash -c 'cat < /dev/null > /dev/tcp/${{ secrets.SERVER_HOST }}/22' && echo "PUERTO 22 ABIERTO" || echo "PUERTO 22 CERRADO/INACCESIBLE"
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /home/${{ secrets.SERVER_USER }}/venedle
-            git pull
-            docker compose -f compose.yaml -f compose.prod.yaml up --build -d
+          cd /home/${{ secrets.SERVER_USER }}/venedle
+          git pull
+          docker compose -f compose.yaml -f compose.prod.yaml up --build -d
