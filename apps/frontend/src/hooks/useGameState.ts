@@ -1,6 +1,7 @@
 // hooks/useGameState.ts
 import type { Comparison } from '@venedle/shared/src/types/guesses';
 import { useLocalStorage } from './useLocalStorage';
+import { MAX_ATTEMPTS } from '@/lib/constants';
 
 const TODAY = new Date().toISOString().split('T')[0]; // "2026-08-13"
 
@@ -51,7 +52,7 @@ export function useGameState() {
   const addGuess = (guess: Guess) => {
     const newGuesses = [...gameState.guesses, guess];
     const won = guess.isCorrect;
-    const lost = !won && newGuesses.length >= 8; // 8 max attempts
+    const lost = !won && newGuesses.length >= MAX_ATTEMPTS;
 
     const newState: GameState = {
       ...gameState,

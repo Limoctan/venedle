@@ -9,6 +9,7 @@ import { GuessRow } from './GuessRow';
 import { Header } from './Header';
 import { ResultCard } from './ResultCard';
 import { categoryLabel } from '@/lib/categories';
+import { Attempts } from './Attempts';
 
 const CATEGORY_ORDER = [
   'Field',
@@ -83,8 +84,6 @@ export function Game() {
 
   useEffect(() => {
     if (gameOver && answerName && today) {
-      console.log('Game over, scrolling to result card');
-      console.log('resultCardRef.current:', resultCardRef.current);
       resultCardRef.current?.scrollIntoView({
         behavior: 'smooth',
         block: 'center', // or 'start'
@@ -96,8 +95,9 @@ export function Game() {
     <div className="w-full bg-gray-950/80 shadow-2xl/100 rounded-4xl px-4 pt-6 pb-8 sm:px-6 lg:px-8">
       <Header streak={currentStreak} />
 
+      <Attempts guesses={guesses.length} />
       {!gameOver && (
-        <div className="mt-6 mb-8">
+        <div className="mb-8">
           <Autocomplete
             onSelect={handleGuess}
             disabled={isSubmitting}

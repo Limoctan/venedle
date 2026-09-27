@@ -1,3 +1,4 @@
+import { MAX_ATTEMPTS } from '@/lib/constants';
 import { Avatar } from './Avatar';
 
 interface ResultCardProps {
@@ -30,8 +31,8 @@ export function ResultCard({
         className="size-40 rounded-2xl font-display text-3xl"
       />
 
-      <h2 className="mt-4 font-display text-2xl font-bold text-black/80">
-        {won ? '¡Lo lograste!' : '¡Se acabaron los intentos!'}
+      <h2 className="mt-4 font-display text-2xl text-black/80">
+        {won ? '¡La pegaste!' : '¡Se acabaron los intentos!'}
       </h2>
 
       <p className="mt-1 text-sm text-black/70">
@@ -50,7 +51,7 @@ export function ResultCard({
 
       <div className="mt-4 flex gap-2">
         <span className="rounded-full bg-miss px-3 py-1 text-xs font-bold text-ink">
-          🎯 {attempts}/8
+          🎯 {attempts}/{MAX_ATTEMPTS}
         </span>
         {streak > 0 && (
           <span className="rounded-full bg-sand px-3 py-1 text-xs font-bold text-black/90">
