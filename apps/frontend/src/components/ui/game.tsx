@@ -4,10 +4,10 @@ import {
   useCharacterDirectory,
   useTodayCharacter,
 } from '../../hooks/useCharacters';
-import { Autocomplete } from './autocomplete';
-import { GuessRow } from './guessRow';
-import { Header } from './header';
-import { ResultCard } from './resultCard';
+import { Autocomplete } from './Autocomplete';
+import { GuessRow } from './GuessRow';
+import { Header } from './Header';
+import { ResultCard } from './ResultCard';
 import { categoryLabel } from '@/lib/categories';
 
 const CATEGORY_ORDER = [

@@ -3,7 +3,7 @@ import { Combobox } from '@base-ui/react/combobox';
 import styles from '../css/Autocomplete.module.css';
 import { useCharacterDirectory } from '@/hooks/useCharacters';
 import { useState } from 'react';
-import { Avatar } from './avatar';
+import { Avatar } from './Avatar';
 
 export function Autocomplete({
   onSelect,

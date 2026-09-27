@@ -1,8 +1,4 @@
-const dateFormatter = new Intl.DateTimeFormat('es-VE', {
-  weekday: 'long',
-  day: 'numeric',
-  month: 'long',
-});
+import { dateFormatter } from '@/lib/utils';
 
 export function Header({ streak }: { streak: number }) {
   return (

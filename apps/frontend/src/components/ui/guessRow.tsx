@@ -2,7 +2,7 @@ import { ArrowBigDown, ArrowBigUp } from 'lucide-react';
 import type { Comparison } from '@venedle/shared/src/types/guesses';
 import { cn } from '@/lib/utils';
 import { shortValue } from '@/lib/categories';
-import { Avatar } from './avatar';
+import { Avatar } from './Avatar';
 import '../css/guessRow.css';
 
 export function GuessRow({
